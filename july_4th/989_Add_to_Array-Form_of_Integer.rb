@@ -21,7 +21,7 @@ k      = 1
 result = [1,0,0,0,0,0,0,0,0,0,0]
 
 test = add_to_array_form(a,k)
-p result == test
+ result == test
 
 # Variant 1
 # Intuition
@@ -80,16 +80,51 @@ def calculate_sum(sum)
     }
 end
 
-def add_to_array_form_3(a, k)
-  k = num_to_array(k)
-  a[-1] = a[-1].push(k)
+ def add_to_array_form_3(a, k) #108 ms	11.2 MB
+  a_last = a.pop
+
+  unless a_last
+    a_new = k % 10
+    k     = k / 10
+
+    return a_new > 0 || k > 0 ? add_to_array_form_3([], k).push(a_new)  : []
+  end
+
+  result = a_last + k
+
+  a_new = result % 10
+  k     = result / 10
+
+  return add_to_array_form_3(a, k).push(a_new)
 end
 
-a      = [9,9,9]
-k      = 1
+# Another variant iterative with reduce
+
+def add_to_array_form_4(a, k) #
+
+  res = a.reverse.reduce([]) do |accu, last_number|
+    result = last_number + k
+
+    a_new = result % 10
+    k     = result / 10
+
+    accu.push(a_new)
+  end
+
+  while k > 0
+    a_new = k % 10
+    k     = k / 10
+
+    res.push(a_new)
+  end
+
+  res.reverse
+end
+
+a      = [1,2]
+k      = 1111
 result = [1,0,0,0,0,0,0,0,0,0,0]
 
-
-test = add_to_array_form_3(a,k)
-p test == result
+test = add_to_array_form_4(a,k)
+test == result
 p test
