@@ -10,13 +10,14 @@
 # Good learning:
 # a.slice!(index) => a[:index] where a is a non-emoty array
 #
-#def reverse_string(s)
+#
+def reverse_string(s)
   i      = -1
   length = s.length-1
 
   s.push(s[0])
 
-  reverse = (length).times do |s|
+  reverse = length.times do |s|
     s = switch(s, length)
 
     i      -= 1
@@ -49,6 +50,7 @@ def reverse_string(s)
 
   s_r
 end
+
 # wikipedia solution
 def reverse_string1(s)
   length     = s.length
@@ -90,16 +92,70 @@ end
 #to think on that posibility. In addition if we can weight the words lets say in a hash e.g s = { 0: "h", 1:"e", 2:"l", 3:"l", 4:"o"} this problem will be treated as a sorting
 #algorithm which can be solved in O(n·lon(n)).
 
-s_long =
- ["A",
+def reverse_string_3(a)
+  return a if a.length == 1
+
+  n = divide(a, a.length / 2)
+
+  half_1 = n.shift
+  half_2 = n
+
+  return merge(reverse_string(half_1), reverse_string(half_2))
+end
+
+def divide(a, n)
+  second_half_element = a.pop
+
+  return [a].push(second_half_element) if a.length == n + 0
+
+  return divide(a, n).push(second_half_element)
+end
+
+def merge(half_1, half_2)
+  half_2.push(half_1).flatten
+end
+
+# a = ["h", "o", "l", "a","c", "h","a","u"]
+# p n = divide(a, a.length / 2)
+#
+# p m = merge(["h", "o", "l", "a"],["c", "h","a","u"])
+a = ["h", "o", "l", "a","c", "h","a","u"]
+b = (["h","o","l","a"])
+c = ["h","l"]
+
+p l = reverse_string_3(a)
+
+
+def reverse_string_4(half_1, half_2)
+  length = half_2.length
+  j      = 0
+  result = []
+
+  (length * 2).times do |index|
+    if index  < length
+      result.push(half_2[-1-j])
+    else
+      result.push(half_1[-1-j])
+    end
+
+    index == length - 1 ? j = 0 : j += 1
+  end
+
+  result
+end
+
+
+
+s_long = [
+  "A",
   " ",
   "m",
   "a",
   "n",
   ",",
-  " ",
-  "a",
-  " ",
+    " ",
+    "a",
+    " ",
   "p",
   "l",
   "a",
@@ -53524,5 +53580,5 @@ s_long =
   "e"
 ]
 
-s =  ["h","o","l","a"]
-p s_long.reverse1 ==  reverse_string(s_long)
+# s =  ["h","o","l","a"]
+# p s_long.reverse1 ==  reverse_string(s_long)
