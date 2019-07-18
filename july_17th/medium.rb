@@ -29,8 +29,15 @@
 #      result.push(a[i])
 #  return result
 #
-#  pseudo code upper level
+#  pseudo code buid
 #
+#  until a is empty
+#    (1). take one character from the highs count and fill new array
+#    (2). take another character from the next highest count
+#         if highest character is nill
+#           return (1) with the next higest character
+#    retunr new array
+#  pseudo code upper level
 #  until i < a.length - 2
 #    1. compare a[i] == a[i+1]
 #    if 1 == true
@@ -128,22 +135,34 @@ b =  ["b","b","b","b","b","b","b"]
 # contrary    if s contains n  letters a and m leters b with n - p == m being 0 < p <  1 the string can be reorganize
 #
 # Pseudo code:
-# 1. sort array
-# 2. count the number of different elements
-# 3. verify rule
-#    if rule == true
-# 4. build new array
-#    else
-#      retun ""
+# (1). sort array
+# (2). count the number of different elements
+# (3). verify rule
+#      if  (3) is true
+# (4).   sort_by_count
+#       else
+#        return ""
+# (5). build new array
 # end
 #
+# sort_by_count
+# (1)  take the first
 #
 def reorganize_string(a)
   a.sort!
-  p a
-  count = count_by_character(a)
-p count
-  can_reorganize?(count)
+
+  a = organize_by_character(a)
+
+  a = calculate_count_by_character(a)
+
+  count  =  a.map {|c| c[:count] }
+
+  return "" unless can_reorganize?(count)
+
+  a = merge_sort(a).reverse
+p a
+ p build_new_string(a)
+true
 end
 
 def can_reorganize?(count)
@@ -155,26 +174,115 @@ def can_reorganize?(count)
   max - (sum - max) <= 1
 end
 
-def count_by_character(a)
+def organize_by_character(a)
   length_a = a.length
 
-  result = []
-  count  = 1
-  ref   = a[0]
+  result     = []
+  character  = []
+  ref        = a[0]
 
   length_a.times do |i|
      if a[i] == a[i + 1]
-       count += 1
+       character.push(a[i])
      else
-       result.push(count)
-       ref = a[i+1]
-       count = 1
+       character.push(a[i])
+       result.push(character)
+
+       ref       = a[i+1]
+       character = []
      end
   end
+  a = result
+end
 
-  result
+def calculate_count_by_character(a)
+  character = a.pop
+
+  return [{character: character, count: character.count}] if a == []
+
+  return calculate_count_by_character(a).push({character: character, count: character.count})
+end
+
+def build_new_string(a)
+  p a
+  i = 0
+  j = 1
+
+  until a.empty?
+    p "111"
+    p a[0]
+    a[0].push
+    low = a[j]
+
+    character[:character] = i.even? ? a[0] : low
+
+    next a.shift if a[0].empty?
+
+    new_array.push(character)
+  end
+
+end
+
+def merge_sort(a)
+  return a if a.length == 1
+
+  n = divide(a, a.length / 2)
+
+  half_1 = n.shift
+  half_2 = n
+
+  return merge(merge_sort(half_1), merge_sort(half_2))
+end
+
+def merge(half_1, half_2)
+  length = half_1.length
+
+  i = 0
+  j = 0
+
+  merged = []
+
+  (2*length).times do |index|
+    if i > length - 1
+      merged[index] = half_2[j]
+      next j += 1
+    end
+
+    if j > length - 1
+      merged[index] = half_1[i]
+      next i += 1
+    end
+
+    if half_1[i] [:count]< half_2[j][:count]
+      merged[index] = half_1[i]
+      i += 1
+    else
+      merged[index] = half_2[j]
+      j += 1
+    end
+  end
+
+  merged
+end
+
+
+def divide(a, n)
+  second_half_element = a.pop
+
+  return [a].push(second_half_element) if a.length == n + 0
+
+  return divide(a, n).push(second_half_element)
 end
 
 a0 = "cxmwmmm".split("")
 a1 = "ababa".split("")
+a2 = "baaba".split("")
+a3 = "vvvlo".split("")
+a4 = "aaab".split("")
+a5 = "baaba".split("")
+p reorganize_string(a0)
 p reorganize_string(a1)
+p reorganize_string(a2)
+p reorganize_string(a3)
+p reorganize_string(a4)
+p reorganize_string(a5)
