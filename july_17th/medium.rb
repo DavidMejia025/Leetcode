@@ -160,7 +160,7 @@ def reorganize_string(a)
   return "" unless can_reorganize?(count)
 
   a = merge_sort(a).reverse
-p a
+
  p build_new_string(a)
 true
 end
@@ -207,20 +207,25 @@ def build_new_string(a)
   p a
   i = 0
   j = 1
+  k = 1
+  result = []
+  limit =  a.map{|char| char[:count]}.reduce(&:+)
 
-  until a.empty?
-    p "111"
-    p a[0]
-    a[0].push
-    low = a[j]
+  while k < limit
+    if k.odd?
+      i += 1 if a[i][:character].empty?
 
-    character[:character] = i.even? ? a[0] : low
+      high_count_char = a[i][:character].pop
 
-    next a.shift if a[0].empty?
+      result.push(high_count_char)
+    else
+      result.push(a[j][:character].pop)
+    end
 
-    new_array.push(character)
+    k += 1
   end
 
+  result
 end
 
 def merge_sort(a)
@@ -280,9 +285,9 @@ a2 = "baaba".split("")
 a3 = "vvvlo".split("")
 a4 = "aaab".split("")
 a5 = "baaba".split("")
-p reorganize_string(a0)
+# p reorganize_string(a0)
 p reorganize_string(a1)
 p reorganize_string(a2)
-p reorganize_string(a3)
+# p reorganize_string(a3) pending due to merge sort update for non n^2 array length
 p reorganize_string(a4)
 p reorganize_string(a5)
