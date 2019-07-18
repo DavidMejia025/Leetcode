@@ -21,6 +21,7 @@
 # (1)  take the first
 #
 def reorganize_string(a)
+p a
   a = get_frequencies(a)
 
   count = count_char_numbers(a)
@@ -50,8 +51,10 @@ end
 def get_frequencies(array)
   length_array = array.length
   new_array = []
-  i = 1
-  while  i <= length_array + 1
+  index = 1
+
+  while  index <= length_array + 1
+
     char = array[0]
 
     count_char = array.select{|ch| ch == char}
@@ -59,7 +62,7 @@ def get_frequencies(array)
     array.reject!{|ch| ch == char}
     new_array.push({"#{char}" => count_char.length})
 
-    i += i
+    index += 1
   end
 
   g = new_array.reject{|char| char.values[0] == 0} #this need to be improved to avoide the last reject step
@@ -93,7 +96,7 @@ def build_new_string(a, count)
 
   result = []
   k      = 1
-  p count
+
   while k <= count.reduce(&:+)  #a.any?{|values| a.values[0] != 0}
     if k.odd?
       result.push(high_char.keys[0])
@@ -102,6 +105,9 @@ def build_new_string(a, count)
       result.push(low_char.keys[0])
       low_char[g_value.call(low_char)] = low_char.values[0] - 1
     end
+
+    high_char = find_higher(a)            if high_char.values[0] == 0
+    low_char = find_low(a * 1, high_char) if low_char.values[0] == 0
 
     k += 1
   end
