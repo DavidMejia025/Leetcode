@@ -69,15 +69,16 @@ def reorganize_string(a)
   return [""]  if a[-2] == a[-1]
 
   a
-#  a = compare_characters(1,0, length_a - 2)
 end
 
 def compare_characters(type, a, index)
   if type == 1
    return  a[index] == a[index + 1] ? [""]  : a
+
   else
     if a[index] == a[index + 1]
       a = change_characters(a, index)
+
       return  [""] if a == [""]
 
       return  compare_characters(1, a, index)
@@ -102,7 +103,7 @@ def change_characters(a, index)
      break
     end
 
-    p i
+    i
   end
 
   return [""] if aux_char == a[index + 1]
@@ -159,10 +160,59 @@ def reorganize_string(a)
 
   return "" unless can_reorganize?(count)
 
+  a = complete_2_n_array(a) unless Math.log2(a.length) % 1 == 0
+
   a = merge_sort(a).reverse
 
- p build_new_string(a)
-true
+  build_new_string(a)
+end
+
+def build_new_string(a)
+  high_i   = 0
+  low_j    = 1
+  k        = 1
+  result   = []
+  push_high = true
+  limit =  a.map{|char| char[:count]}.reduce(&:+)
+
+  while k <= limit
+   break if  (a[high_i][:count] == 0 || a[low_j][:count] == 0)
+
+   if k.odd?
+     high_i, low_j = find_next_high_char(a, high_i, low_j) if a[high_i][:character].empty?
+
+     high_count_char = a[high_i][:character].pop
+
+     result.push(high_count_char)
+   else
+     low_j += 1 if a[low_j][:character].empty?
+
+     result.push(a[low_j][:character].pop)
+   end
+
+    k += 1
+  end
+
+  result
+end
+
+def find_next_high_char(a, high_i, low_j)
+  a[low_j][:character].count < 2 ? high_i = low_j + 1 : high_i += 1
+
+  low_j = high_i + 1
+
+  return high_i, low_j
+end
+
+def complete_2_n_array(a)
+  k = a.length
+
+  until Math.log2(k) % 1 == 0
+    a.push({character: "", count: 0})
+
+    k += 1
+  end
+  a
 end
 
 def can_reorganize?(count)
@@ -182,17 +232,18 @@ def organize_by_character(a)
   ref        = a[0]
 
   length_a.times do |i|
-     if a[i] == a[i + 1]
-       character.push(a[i])
-     else
-       character.push(a[i])
-       result.push(character)
+    if a[i] == a[i + 1]
+      character.push(a[i])
+    else
+      character.push(a[i])
+      result.push(character)
 
-       ref       = a[i+1]
-       character = []
-     end
+      ref       = a[i+1]
+      character = []
+    end
   end
-  a = result
+
+  result
 end
 
 def calculate_count_by_character(a)
@@ -201,31 +252,6 @@ def calculate_count_by_character(a)
   return [{character: character, count: character.count}] if a == []
 
   return calculate_count_by_character(a).push({character: character, count: character.count})
-end
-
-def build_new_string(a)
-  p a
-  i = 0
-  j = 1
-  k = 1
-  result = []
-  limit =  a.map{|char| char[:count]}.reduce(&:+)
-
-  while k < limit
-    if k.odd?
-      i += 1 if a[i][:character].empty?
-
-      high_count_char = a[i][:character].pop
-
-      result.push(high_count_char)
-    else
-      result.push(a[j][:character].pop)
-    end
-
-    k += 1
-  end
-
-  result
 end
 
 def merge_sort(a)
@@ -284,10 +310,14 @@ a1 = "ababa".split("")
 a2 = "baaba".split("")
 a3 = "vvvlo".split("")
 a4 = "aaab".split("")
-a5 = "baaba".split("")
-# p reorganize_string(a0)
-p reorganize_string(a1)
-p reorganize_string(a2)
-# p reorganize_string(a3) pending due to merge sort update for non n^2 array length
-p reorganize_string(a4)
-p reorganize_string(a5)
+a5 = "bfrbs".split("")
+a6 = "todrnphcamnomskfrhe".split("")
+a7 = "ogccckcwmbmxtsbmozli".split("")
+p  reorganize_string(a0)
+p  reorganize_string(a1)
+p  reorganize_string(a2)
+p  reorganize_string(a3) #pending due to merge sort update for non n^2 array length
+p  reorganize_string(a4)
+p  reorganize_string(a5)
+p  reorganize_string(a7)
+
