@@ -164,6 +164,40 @@ def sort_colors(nums)
   p nums
 end
 
+def sort_colors_let_code_fastest(nums) #28 ms, faster than 99.08%
+  zero_index = -1
+  one_index = -1
+  two_index = -1
+  nums.each_with_index do |num, index|
+    if num == 0
+      zero_index += 1
+      one_index += 1
+      two_index += 1
+      tmp_0 = nums[zero_index]
+      tmp_1 = nums[one_index]
+      if zero_index == one_index && one_index == two_index
+        next
+      elsif zero_index == one_index || one_index == two_index
+        nums[zero_index] = num
+        nums[two_index] = tmp_0
+      else
+        nums[zero_index] = num
+        nums[one_index] = tmp_0
+        nums[two_index] = tmp_1
+      end
+    elsif num == 1
+      one_index += 1
+      two_index += 1
+      tmp = nums[one_index]
+      nums[one_index] = nums[two_index]
+      nums[two_index] = tmp
+    else
+      two_index += 1
+    end
+  end
+  nums
+end
+
 nums = [2,0,2,1,1,0]
 nums = [0, 0, 0, 1, 1, 1, 2, 2, 2, 2]
 nums = [2,2,0,0,2,0,2,1,0]
