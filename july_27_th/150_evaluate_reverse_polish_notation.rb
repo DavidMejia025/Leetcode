@@ -65,15 +65,15 @@
 # 1. https://whatis.techtarget.com/definition/Polish-notation-prefix-notation
 # 2. https://www.scss.tcd.ie/John.Waldron/3d1/rpn.pdf
 #
-  def eval_rpn(a)
+  def eval_rpn_mine(a)
     while a.length > 1
-     operator, index_operator =  find_operator(a)
+      operator, index_operator =  find_operator(a)
 
-    p  partial_result = calculate(operator, a[index_operator-2], a[index_operator-1])
+      partial_result = calculate(operator, a[index_operator-2], a[index_operator-1])
 
-     return false if partial_result == false
+      return false if partial_result == false
 
-     a =  apply_calculation_operation(a, index_operator, partial_result)
+      a =  apply_calculation_operation(a, index_operator, partial_result)
     end
 
     a[0]
@@ -139,10 +139,61 @@ a = ["2", "1", "+", "3", "*"]
 # eval_rpn(["4", "13", "5", "/", "+"])
 # p eval_rpn(["3","10","5","+","*"])
 # p eval_rpn(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])
-p eval_rpn(["-78","-33","196","+","-19","-","115","+","-","-99","/","-18","8","*","-86","-","-","16","/","26","-14","-","-","47","-","101","-","163","*","143","-","0","-","171","+","120","*","-60","+","156","/","173","/","-24","11","+","21","/","*","44","*","180","70","-40","-","*","86","132","-84","+","*","-","38","/","/","21","28","/","+","83","/","-31","156","-","+","28","/","95","-","120","+","8","*","90","-","-94","*","-73","/","-62","/","93","*","196","-","-59","+","187","-","143","/","-79","-89","+","-","3","-"])
+leetcode_test = ["-78","-33","196","+","-19","-","115","+","-","-99","/","-18","8","*","-86","-","-","16","/","26","-14","-","-","47","-","101","-","163","*","143","-","0","-","171","+","120","*","-60","+","156","/","173","/","-24","11","+","21","/","*","44","*","180","70","-40","-","*","86","132","-84","+","*","-","38","/","/","21","28","/","+","83","/","-31","156","-","+","28","/","95","-","120","+","8","*","90","-","-94","*","-73","/","-62","/","93","*","196","-","-59","+","187","-","143","/","-79","-89","+","-","3","-"]
 p "end"
-p eval_rpn(["17", "3", "-"])
-p "end"
-p eval_rpn(["15", "7", "1", "1", "+","-","/", "3", "*", "2", "1", "1", "+", "+" ,"-"])
-p eval_rpn(["15", "-", "-"])
+#p eval_rpn(["17", "3", "-"])
+#p "end"
+#p eval_rpn(["15", "7", "1", "1", "+","-","/", "3", "*", "2", "1", "1", "+", "+" ,"-"])
+#p eval_rpn(["15", "-", "-"])
+#p eval_rpn( ["4", "13", "5", "/", "+"])
 # Edge cases
+#
+def eval_rpn(a)
+  operators = [ "+","-","*","/"]
+  stack     = []
+  a.each do|element|
+    next stack.push(element) unless  operators.include?(element)
+
+    num2 = stack.pop
+    num1 = stack.pop
+
+    stack.push(calculate(element, num1, num2))
+  end
+
+  stack[0]
+end
+
+#def eval_rpn_fancy_leet_code_sol(a) #56 ms, faster than 31.71%
+def eval_rpn(a) #56 ms, faster than 31.71%
+    t = a.pop
+    return t.to_i if !(op = '+-*/'.index t)
+    b, a = eval_rpn(a), eval_rpn(a)
+    [a+b, a-b, a*b, a.fdiv(b)][op].to_i
+end
+ACTIONS = { '*' => true, '+' => true, '-' => true, '/' => true }
+
+# @param {String[]} tokens
+# @return {Integer}
+def eval_rpn_lc_fastest(tokens)
+  stack = []
+  loop do
+    item = tokens.shift
+    break unless item
+
+    if ACTIONS[item]
+      val2 = stack.pop
+      val1 = stack.pop
+      stack.push(val1.to_f.send(item, val2).to_i)
+    else
+      stack << item.to_i
+    end
+  end
+
+  stack[0]
+end
+
+#p eval_rpn(["17", "3", "-"])
+p eval_rpn_lc_fastest(["17","3","-"])
+p eval_rpn_lc_fastest(leetcode_test)
+#p eval_rpn_mine(leetcode_test)
+#p eval_rpn(leetcode_test)
