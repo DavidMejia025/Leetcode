@@ -18,17 +18,23 @@
 #          go to (1)
 #        else return false
 #
+#Let code Solution:
+#This is a dynamic programming[1] question. Usually, solving and fully understanding a dynamic programming problem is a 4 step process:
 #
-def can_jump?(a)
+# Start with the recursive backtracking solution
+# Optimize by using a memoization table (top-down[2] dynamic programming)
+# Remove the need for recursion (bottom-up dynamic programming)
+# Apply final tricks to reduce the time / memory complexity
+# All solutions presented below produce the correct result, but they differ in run time and memory requirements.
+#
+def can_jump?(a) # 56 ms, faster than 17.02%
   return true if a.length == 1
 
-  zero_positions = [0]
-
   a.each_with_index do|jump, index|
-    if index < (a.length - 1) && jump == 0
-      zero_positions.push(index)
+    return false if index == 0 && jump == 0
 
-      return false unless can_jump_zero?(a, zero_positions)
+    if jump == 0
+      return false unless can_jump_zero?(a, index)
     end
   end
 
@@ -36,13 +42,13 @@ def can_jump?(a)
 end
 
 def can_jump_zero?(a, index)
-  k = index[-1]
+  k = index
   i = 1
 
-  return true if a[k+1] == 0
+  while k > 0 do
+    return true if index == (a.length) - 1 && a[k-1] >= i
 
-  while k > index[-2] do
-    return true if a[k-1] > i
+    return true if a[k-1] > i || a[index+1] == 0
 
     k -= 1
     i += 1
@@ -51,11 +57,30 @@ def can_jump_zero?(a, index)
   false
 end
 
+def can_jump(nums) # ruby fastests
+  return true if nums.length < 2
+  current = nums.length - 1
+  distance = 0
+  while current > 0
+    current -= 1
+    distance += 1
+    if nums[current] >= distance
+      distance = 0
+    end
+  end
+  return distance == 0
+end
+
 # happy path test:
-a = [2,3,1,1,4]
-p can_jump?(a)
+# = [2,3,1,1,4]
+# can_jump?(a)
 p can_jump?([3,2,1,0,4])
 #
 # edge_cases
 p can_jump?([2,0])
 p can_jump?([2,0,0,0,0])
+p can_jump?([4,0,0,0,1,4])
+p can_jump?([3,0,0,0,0])
+p "123"
+p can_jump?([2,1,0,0])
+p can_jump?([5,9,3,2,1,0,2,3,3,1,0,0])
