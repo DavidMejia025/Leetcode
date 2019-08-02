@@ -1,4 +1,7 @@
+# Recursion implementing bottom to top new linked list.
+#
 # Definition for singly-linked list.
+#
 # class ListNode
 #     attr_accessor :val, :next
 #     def initialize(val)
