@@ -16,7 +16,13 @@ def add_two_numbers(l1, l2)
 
   result = sum_list(l1, l2)
 end
-
+#
+# Summary:
+#sum list creates the new list
+#sum creates new node to append to the new list
+#until goes deeper into the l1 and l2 list doing l1.next and l2.next for each step
+# get last node ensure to link the new node to the bottom of the new list.
+#
 def sum_list(l1, l2)
   result = sum(l1, l2, 0)
 
