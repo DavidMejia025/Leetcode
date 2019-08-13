@@ -2,17 +2,34 @@
 #
 #
 #
-def find_sum(num, a, a_1, i)
+# pass with num
+# pass without number
+#
+#
+#
+def find_sum(num, a, carry, index)
+  return 0 if index == (a.length) * -1 - 1
 
-  if i == ((a.length) - 1)
-    return a[i]
-  end
+  current    = [a[index]]
+  left_carry = current + carry
 
-  return [a_1] + ([find_sum(num, a, a_1, i+1) + find_sum(num, a, a[i] + a_1, i+1)] )
+  index -= 1
+
+  return 0 if sum_num(num, left_carry) > num
+
+  left  = find_sum(num, a, left_carry, index) + sum_num(num, left_carry)
+  rigth = find_sum(num, a, carry, index)
+
+  return left + rigth
 end
 
-num = 8
-a   = [1, 2, 4]
-a_1 = 0
-p find_sum(num, a, a_1, 0)
+def sum_num(num, carry)
+p carry
+ carry.reduce(&:+) == num ? 1 : 0
+end
+
+num = 16
+a   = [6, 10, 20, 20]
+p "start"
+p find_sum(num, a, [0], -1)
 p "result"
