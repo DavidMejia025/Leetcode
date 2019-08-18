@@ -16,8 +16,6 @@
 #
 # Write a solution that’s efficient even when we can’t put a nice upper bound on the numbers representing our time ranges. Here we’ve simplified our times down to the number of 30-minute slots past 9:00 am. But we want the method to work even for very large numbers, like Unix timestamps. In any case, the spirit of the challenge is to merge meetings where start_time and end_time don’t have an upper bound.
 #
-#First solution suppouse 30 min slots and upper bound limit
-#
 require 'date'
 def merge_ranges(m)
   m.sort!
@@ -39,11 +37,13 @@ def merge_ranges(m)
 end
 
 meeting_hour = lambda{|h,m| DateTime.new(2019,8,17,h,m,0).to_time.to_i}
-m = [[13,14], [16,17],[9,11]]
+
+m = [[13,14], [16,17],[9,15]]
 p m
+
 m = m.map do|met|
       [meeting_hour.call(met[0],0),meeting_hour.call(met[1],0)]
 end
-#m = [[4, 8], [0, 1], [10, 12], [9, 10],[3, 5]]
+
 p m
 p merge_ranges(m)
