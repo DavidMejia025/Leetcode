@@ -1,4 +1,7 @@
+# Recursion implementing bottom to top new linked list.
+#
 # Definition for singly-linked list.
+#
 # class ListNode
 #     attr_accessor :val, :next
 #     def initialize(val)
@@ -10,20 +13,11 @@
 # @param {ListNode} l1
 # @param {ListNode} l2
 # @return {ListNode}
-# # @param {ListNode} l1
-# @param {ListNode} l2
-# @return {ListNode}
 def add_two_numbers(l1, l2)
     return l2 unless l1
     return l1 unless l2
 
-    result = sum(l1, l2, 0)
-
-    tail   = sum_list(result, l1.next, l2.next)
-
-    add_carry(tail)
-
-    result
+    head   = sum_list(0, l1, l2)
 end
 
 def add_carry(tail)
@@ -33,22 +27,25 @@ def add_carry(tail)
     else
         tail.next = nil
     end
+
+    tail
 end
 
-def sum_list(result, l1, l2)
-    return result if l2.nil? && l1.nil?
+def sum_list(carry, l1, l2)
+     if l2.next.nil? && l1.next.nil?
+         head = sum(l1, l2, carry)
 
-    if l2.nil?
-        l2 = ListNode.new(0) if l2.nil?
-        result.next = sum(l1, l2, result.next)
-    elsif l1.nil?
-        l1 = ListNode.new(0) if l1.nil?
-        result.next = sum(l1, l2, result.next)
-    else
-        result.next = sum(l1, l2, result.next)
-    end
+         return add_carry(head)
+     end
 
-    sum_list(result.next, l1.next, l2.next)
+    head      = sum(l1, l2, carry)
+
+    l1 = l1.next.nil? ?ListNode.new(0) : l1.next
+    l2 = l2.next.nil? ?ListNode.new(0) : l2.next
+
+    head.next = sum_list(head.next, l1, l2)
+
+    return head
 end
 
 def sum(l1, l2, carry)
@@ -61,3 +58,6 @@ def sum(l1, l2, carry)
 
     new_node
 end
+
+
+
