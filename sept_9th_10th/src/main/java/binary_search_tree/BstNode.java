@@ -1,7 +1,7 @@
 package binary_search_tree;
 
 public class BstNode {
-    private int  root;
+    private long  root;
     private long  left;
     private long  right;
 
@@ -20,6 +20,7 @@ public class BstNode {
     public long getRight() {
         return right;
     }
+    
     public void setRoot(long num) {
         this.root = num;
     }
